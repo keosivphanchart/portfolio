@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Portfolio of Keo Sivphanchart — DevOps & Software Engineer. CI/CD, DevSecOps, Go, and cloud infrastructure."
+    />
+    <title>Keo Sivphanchart — DevOps &amp; Software Engineer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,500;1,600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+    <script>
+      // Apply saved theme before paint to avoid a flash of the wrong theme
+      (function () {
+        var t = localStorage.getItem("theme");
+        if (t) document.documentElement.setAttribute("data-theme", t);
+      })();
+    </script>
+  </head>
+  <body>
+    <!-- Scroll progress bar -->
+    <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
+    <!-- ===== NAVBAR ===== -->
+    <header class="navbar">
+      <a href="#home" class="logo">
+        <span class="logo-mark">K</span>
+        <span class="logo-text">Sivphanchart<span>.</span></span>
+      </a>
+      <nav class="nav-links" id="navLinks">
+        <a href="#home" data-section="home">Home</a>
+        <a href="#services" data-section="services">Services</a>
+        <a href="#projects" data-section="projects">Projects</a>
+        <a href="#skills" data-section="skills">Skills</a>
+        <a href="#experience" data-section="experience">Experience</a>
+        <a href="#contact" data-section="contact">Contact</a>
+      </nav>
+      <button
+        class="theme-toggle"
+        id="themeToggle"
+        aria-label="Toggle light/dark theme"
+      ></button>
+      <a
+        href="mailto:keosivphanchart@gmail.com"
+        class="btn btn-outline btn-sm nav-cta"
+        >Hire Me</a
+      >
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+        &#9776;
+      </button>
+    </header>
+
+    <!-- ===== HERO / ABOUT ===== -->
+    <section id="home" class="hero">
+      <div class="hero-glow" aria-hidden="true"></div>
+      <div class="hero-glow hero-glow-2" aria-hidden="true"></div>
+      <div class="dot-grid" aria-hidden="true"></div>
+
+      <div class="hero-inner">
+        <div class="hero-content">
+          <p class="hero-badge">
+            <span class="pulse-dot"></span> Available for work
+          </p>
+          <p class="hero-greeting">Hello, I'm</p>
+          <h1 class="hero-name">Keo Sivphanchart</h1>
+          <h2 class="hero-tagline">
+            A
+            <em
+              ><span id="typewriter">DevOps Engineer</span
+              ><span class="caret"></span
+            ></em>
+          </h2>
+          <p class="hero-bio">
+            DevOps engineer at Hattha Bank and RUPP graduate (Class of 2025),
+            focused on CI/CD automation, cloud infrastructure, and building
+            things secure by design (DevSecOps). I enjoy writing Go and making
+            deployments boring — in the best way.
+          </p>
+          <div class="hero-actions">
+            <a href="assets/resume/resume.pdf" class="btn btn-primary" download>
+              <svg
+                class="icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              Get Resume
+            </a>
+            <a href="#projects" class="btn btn-ghost">
+              View Work
+              <svg
+                class="icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+            </a>
+          </div>
+          <div class="hero-socials">
+            <a
+              href="https://github.com/keosivphanchart"
+              target="_blank"
+              rel="noopener"
+              aria-label="GitHub"
+            >
+              <svg
+                class="icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path
+                  d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"
+                />
+              </svg>
+            </a>
+            <a
+              href="https://www.linkedin.com/in/keo-sivphanchart-541ba83ba/"
+              target="_blank"
+              rel="noopener"
+              aria-label="LinkedIn"
+            >
+              <svg
+                class="icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path
+                  d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4V9h4v1.57A6 6 0 0 1 16 8z"
+                />
+                <rect x="2" y="9" width="4" height="12" />
+                <circle cx="4" cy="4" r="2" />
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Portrait: drop your photo at assets/images/profile.jpg and it appears
+           automatically; until then your initials show as a placeholder. -->
+        <div class="hero-portrait">
+          <div class="portrait-ring">
+            <div class="portrait">
+              <span class="portrait-initials">KS</span>
+              <img
+                src="assets/images/profile.png"
+                alt="Portrait of Keo Sivphanchart"
+                onerror="this.remove()"
+              />
+            </div>
+          </div>
+          <div class="portrait-chip chip-a">
+            <svg
+              class="icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <polyline points="16 18 22 12 16 6" />
+              <polyline points="8 6 2 12 8 18" />
+            </svg>
+            CI/CD Automation
+          </div>
+          <div class="portrait-chip chip-b">
+            <svg
+              class="icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+            </svg>
+            DevSecOps Mindset
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== STATS ===== -->
+    <section class="stats reveal" aria-label="Statistics">
+      <div class="stats-inner" id="statsRow">
+        <!-- Stat counters are generated by js/main.js -->
+      </div>
+    </section>
+
+    <!-- ===== SERVICES ===== -->
+    <section id="services" class="section reveal">
+      <p class="section-kicker">Services</p>
+      <h2 class="section-title">What I <em>Do</em></h2>
+      <div class="services-grid" id="servicesGrid">
+        <!-- Service cards are generated by js/main.js -->
+      </div>
+    </section>
+
+    <!-- ===== PROJECTS ===== -->
+    <section id="projects" class="section reveal">
+      <p class="section-kicker">Portfolio</p>
+      <h2 class="section-title">Recent <em>Projects</em></h2>
+      <div class="projects-grid" id="projectsGrid">
+        <!-- Project cards are generated by js/main.js -->
+      </div>
+    </section>
+
+    <!-- ===== SKILLS ===== -->
+    <section id="skills" class="section reveal">
+      <p class="section-kicker">What I know</p>
+      <h2 class="section-title">My <em>Skills</em></h2>
+      <div class="skills-grid" id="skillsList">
+        <!-- Skill bars are generated by js/main.js -->
+      </div>
+    </section>
+
+    <!-- ===== QUOTE / MOTTO ===== -->
+    <section class="quote-strip reveal" aria-label="Personal motto">
+      <figure class="quote-inner">
+        <blockquote class="quote-text">
+          Stay calm like a capybara — automate everything, stress about nothing.
+        </blockquote>
+        <figcaption class="quote-author">— my DevOps philosophy</figcaption>
+      </figure>
+    </section>
+
+    <!-- ===== EXPERIENCE ===== -->
+    <section id="experience" class="section reveal">
+      <p class="section-kicker">My journey</p>
+      <h2 class="section-title">Experience &amp; <em>Education</em></h2>
+      <div class="timeline" id="timeline">
+        <!-- Timeline items are generated by js/main.js -->
+      </div>
+    </section>
+
+    <!-- ===== CONTACT ===== -->
+    <section id="contact" class="section reveal">
+      <div class="contact-panel">
+        <div class="contact-glow" aria-hidden="true"></div>
+        <p class="section-kicker">What's next?</p>
+        <h2 class="section-title">Get In <em>Touch</em></h2>
+        <p class="contact-text">
+          I'm currently open to new opportunities. Whether you have a question
+          or just want to say hi, my inbox is always open.
+        </p>
+        <a
+          href="mailto:keosivphanchart@gmail.com"
+          class="btn btn-primary btn-lg"
+        >
+          <svg
+            class="icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <rect x="2" y="4" width="20" height="16" rx="2" />
+            <polyline points="22,6 12,13 2,6" />
+          </svg>
+          Say Hello
+        </a>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p>
+        &copy; <span id="year"></span> Keo Sivphanchart · Built with plain HTML,
+        CSS &amp; JS
+      </p>
+    </footer>
+
+    <!-- Back to top -->
+    <a href="#home" class="back-to-top" id="backToTop" aria-label="Back to top">
+      <svg
+        class="icon"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <line x1="12" y1="19" x2="12" y2="5" />
+        <polyline points="5 12 12 5 19 12" />
+      </svg>
+    </a>
+
+    <script src="js/main.js"></script>
+  </body>
+</html>
