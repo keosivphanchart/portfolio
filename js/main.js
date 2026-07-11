@@ -94,6 +94,28 @@ const experience = [
   },
 ];
 
+/* Tech stack logos — scrolls in an infinite marquee loop.
+   Icons come from the free Devicon / Simple Icons CDNs; to add one,
+   find its slug at devicon.dev or simpleicons.org. */
+const DEVICON = (slug, variant = "original") =>
+  `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${slug}/${slug}-${variant}.svg`;
+
+const techStack = [
+  { name: "Docker", img: DEVICON("docker") },
+  { name: "Kubernetes", img: DEVICON("kubernetes", "plain") },
+  { name: "Go", img: DEVICON("go") },
+  { name: "Prometheus", img: DEVICON("prometheus") },
+  { name: "Grafana", img: DEVICON("grafana") },
+  { name: "Zabbix", img: "https://cdn.simpleicons.org/zabbix" },
+  { name: "Elasticsearch", img: DEVICON("elasticsearch") },
+  { name: "PostgreSQL", img: DEVICON("postgresql") },
+  { name: "React", img: DEVICON("react") },
+  { name: "Linux", img: DEVICON("linux") },
+  { name: "Git", img: DEVICON("git") },
+  { name: "Terraform", img: DEVICON("terraform") },
+  { name: "Python", img: DEVICON("python") },
+];
+
 /* Stat counters — numbers animate up when scrolled into view */
 const stats = [
   { value: 2, suffix: "+", label: "Years Experience" },
@@ -237,6 +259,24 @@ timeline.innerHTML = experience
     </div>`
   )
   .join("");
+
+/* ===== Render tech stack marquee =====
+   The list is rendered twice; the CSS animation slides the track by
+   -50% so the second copy lands exactly where the first began — that's
+   what makes the loop seamless. */
+const techTrack = document.getElementById("techTrack");
+const techTiles = techStack
+  .map(
+    (t) => `
+    <div class="tech-tile">
+      <img src="${t.img}" alt="" loading="lazy" />
+      <span>${t.name}</span>
+    </div>`
+  )
+  .join("");
+techTrack.innerHTML =
+  `<div class="tech-set">${techTiles}</div>` +
+  `<div class="tech-set" aria-hidden="true">${techTiles}</div>`;
 
 /* ===== Render stats ===== */
 const statsRow = document.getElementById("statsRow");
