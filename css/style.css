@@ -721,17 +721,19 @@ a { color: var(--accent); text-decoration: none; }
   transition: width 1.2s cubic-bezier(0.25, 0.7, 0.3, 1);
 }
 
-/* ===== Tech stack 3D sphere ===== */
-.tech-strip {
-  padding: 0 0 6.5rem;
-  text-align: center;
+/* ===== Skills layout: bars left, 3D icon sphere right ===== */
+.skills-wrap {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  align-items: center;
+  gap: 2rem 3.5rem;
+  text-align: left;
 }
-.tech-strip .section-kicker { margin-bottom: 0.5rem; }
 
 .tech-cloud {
   position: relative;
-  height: 460px;
-  max-width: 620px;
+  height: 400px;
+  max-width: 460px;
   margin: 0 auto;
 }
 /* soft orange glow behind the sphere */
@@ -759,16 +761,21 @@ a { color: var(--accent); text-decoration: none; }
 }
 
 .tech-hint {
-  margin-top: 0.6rem;
+  margin-top: 0.4rem;
   color: var(--text-muted);
   font-size: 0.78rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   opacity: 0.7;
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .skills-wrap { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 640px) {
-  .tech-cloud { height: 340px; }
+  .tech-cloud { height: 320px; }
   .cloud-icon img { width: 40px; height: 40px; }
 }
 

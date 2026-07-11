@@ -106,7 +106,7 @@ const techStack = [
   { name: "Go", img: DEVICON("go") },
   { name: "Prometheus", img: DEVICON("prometheus") },
   { name: "Grafana", img: DEVICON("grafana") },
-  { name: "Zabbix", img: "https://cdn.simpleicons.org/zabbix" },
+  { name: "Zabbix", img: "https://www.vectorlogo.zone/logos/zabbix/zabbix-icon.svg" },
   { name: "Elasticsearch", img: DEVICON("elasticsearch") },
   { name: "PostgreSQL", img: DEVICON("postgresql") },
   { name: "React", img: DEVICON("react") },
@@ -114,6 +114,12 @@ const techStack = [
   { name: "Git", img: DEVICON("git") },
   { name: "Terraform", img: DEVICON("terraform") },
   { name: "Python", img: DEVICON("python") },
+  // Kafka's brand logo is black, so it comes from Simple Icons tinted
+  // gray to stay visible on both the dark and light themes.
+  { name: "Kafka", img: "https://cdn.simpleicons.org/apachekafka/8b8d99" },
+  { name: "Redis", img: DEVICON("redis") },
+  { name: "Nexus", img: "https://cdn.simpleicons.org/sonatype" },
+  { name: "RHEL", img: DEVICON("redhat") },
 ];
 
 /* Stat counters — numbers animate up when scrolled into view */
@@ -261,9 +267,10 @@ timeline.innerHTML = experience
   .join("");
 
 /* ===== Tech stack 3D sphere =====
-   Icons are spread evenly on a sphere (fibonacci distribution) and the
-   sphere spins continuously. Moving the mouse over it tilts the axis
-   and speeds up / reverses the spin. Depth = scale + opacity. */
+   Icons are spread evenly on a sphere (fibonacci distribution). The
+   sphere does NOT auto-spin — it follows the mouse: horizontal
+   position rotates it, vertical position tilts it, with smooth easing.
+   Depth = scale + opacity. */
 const techCloud = document.getElementById("techCloud");
 techCloud.innerHTML = techStack
   .map(
@@ -281,38 +288,40 @@ if (reducedMotion) {
   const N = icons.length;
   const GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5));
 
-  // evenly distributed points on a unit sphere
+  // evenly distributed points on a unit sphere; the half-step offset
+  // keeps any icon off the exact poles (a pole point wouldn't move
+  // when the sphere rotates)
   const points = icons.map((_, i) => {
-    const y = 1 - (i / (N - 1)) * 2;
+    const y = 1 - ((i + 0.5) / N) * 2;
     const r = Math.sqrt(1 - y * y);
     const theta = GOLDEN_ANGLE * i;
     return { x: Math.cos(theta) * r, y, z: Math.sin(theta) * r };
   });
 
-  let angle = 0;
-  let speed = 0.0035;          // current spin speed (rad/frame)
-  let targetSpeed = 0.0035;
+  let angle = 0.6;             // current rotation
+  let targetAngle = 0.6;
   let tilt = 0.35;             // current axis tilt
   let targetTilt = 0.35;
 
-  // mouse steers the sphere: horizontal = spin speed, vertical = tilt
-  techCloud.addEventListener("mousemove", (e) => {
+  // the mouse position IS the rotation target — no auto-spin
+  const steer = (clientX, clientY) => {
     const rect = techCloud.getBoundingClientRect();
-    const dx = (e.clientX - rect.left) / rect.width - 0.5;  // -0.5 .. 0.5
-    const dy = (e.clientY - rect.top) / rect.height - 0.5;
-    targetSpeed = 0.0035 + dx * 0.02;
-    targetTilt = 0.35 + dy * 1.6;
-  });
-  techCloud.addEventListener("mouseleave", () => {
-    targetSpeed = 0.0035;
-    targetTilt = 0.35;
-  });
+    const dx = (clientX - rect.left) / rect.width - 0.5;  // -0.5 .. 0.5
+    const dy = (clientY - rect.top) / rect.height - 0.5;
+    targetAngle = 0.6 + dx * 4;   // ~±115° of rotation across the width
+    targetTilt = 0.35 + dy * 1.8;
+  };
+  techCloud.addEventListener("mousemove", (e) => steer(e.clientX, e.clientY));
+  techCloud.addEventListener(
+    "touchmove",
+    (e) => steer(e.touches[0].clientX, e.touches[0].clientY),
+    { passive: true }
+  );
 
   const frame = () => {
-    // ease toward the mouse-driven targets for a smooth feel
-    speed += (targetSpeed - speed) * 0.05;
-    tilt += (targetTilt - tilt) * 0.05;
-    angle += speed;
+    // ease toward the mouse-driven targets for a smooth, weighty feel
+    angle += (targetAngle - angle) * 0.06;
+    tilt += (targetTilt - tilt) * 0.06;
 
     const rect = techCloud.getBoundingClientRect();
     const R = Math.min(rect.width, rect.height) / 2 - 44;
