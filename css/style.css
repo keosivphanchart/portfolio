@@ -730,43 +730,42 @@ a { color: var(--accent); text-decoration: none; }
 }
 .tech-strip .section-kicker { margin-bottom: 1.8rem; }
 
-.tech-grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 1.2rem;
+/* organic scattered logo cloud — positions are set inline by js/main.js */
+.tech-cloud {
+  position: relative;
+  height: 480px;
+  max-width: 560px;
+  margin: 0 auto;
+}
+/* soft glow behind the cluster */
+.tech-cloud::before {
+  content: "";
+  position: absolute;
+  inset: 12%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 162, 0, 0.07), transparent 70%);
+  pointer-events: none;
 }
 
-.tech-tile {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.55rem;
-  width: 104px;
-  padding: 1.1rem 0.6rem;
-  background: linear-gradient(160deg, var(--bg-panel-2), var(--bg-panel));
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+.cloud-icon {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  transition: transform 0.25s ease, filter 0.25s ease;
 }
-.tech-tile:hover {
-  transform: translateY(-6px);
-  border-color: rgba(255, 162, 0, 0.5);
-  box-shadow: var(--shadow-card);
+.cloud-icon img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.35));
 }
-.tech-tile img { width: 42px; height: 42px; object-fit: contain; }
-.tech-tile span {
-  font-size: 0.72rem;
-  font-weight: 500;
-  color: var(--text-muted);
-  white-space: nowrap;
+.cloud-icon:hover {
+  transform: translate(-50%, -50%) scale(1.18);
+  z-index: 5;
 }
 
 @media (max-width: 640px) {
-  .tech-grid { gap: 0.9rem; }
-  .tech-tile { width: 88px; }
-  .tech-tile img { width: 36px; height: 36px; }
+  .tech-cloud { height: 360px; }
 }
 
 /* ===== Quote / motto strip ===== */

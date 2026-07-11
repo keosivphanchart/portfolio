@@ -266,16 +266,25 @@ timeline.innerHTML = experience
   )
   .join("");
 
-/* ===== Render tech stack tiles (static grid) ===== */
-const techGrid = document.getElementById("techGrid");
-techGrid.innerHTML = techStack
-  .map(
-    (t, i) => `
-    <div class="tech-tile reveal-item" style="--stagger: ${i * 0.05}s" title="${t.name}">
-      <img src="${t.img}" alt="" loading="lazy" />
-      <span>${t.name}</span>
-    </div>`
-  )
+/* ===== Render tech stack cloud (organic scatter, static) =====
+   Icons are laid out on a sunflower (phyllotaxis) spiral: it looks
+   like a loose organic cluster but spreads evenly, so logos never
+   pile onto each other. Nothing animates — hover only. */
+const techCloud = document.getElementById("techCloud");
+const GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5));
+techCloud.innerHTML = techStack
+  .map((t, i) => {
+    const r = Math.sqrt((i + 0.6) / techStack.length) * 42; // % from center
+    const theta = i * GOLDEN_ANGLE;
+    const left = 50 + r * Math.cos(theta);
+    const top = 50 + r * Math.sin(theta);
+    const size = 44 + ((i * 29) % 4) * 8; // 44–68px, varied but deterministic
+    return `
+    <div class="cloud-icon reveal-item" title="${t.name}"
+         style="--stagger: ${i * 0.04}s; left:${left.toFixed(1)}%; top:${top.toFixed(1)}%; width:${size}px; height:${size}px;">
+      <img src="${t.img}" alt="${t.name}" loading="lazy" />
+    </div>`;
+  })
   .join("");
 
 /* ===== Render stats ===== */
