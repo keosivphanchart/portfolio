@@ -266,26 +266,118 @@ timeline.innerHTML = experience
   )
   .join("");
 
-/* ===== Render tech stack cloud (organic scatter, static) =====
-   Icons are laid out on a sunflower (phyllotaxis) spiral: it looks
-   like a loose organic cluster but spreads evenly, so logos never
-   pile onto each other. Nothing animates — hover only. */
+/* ===== Tech stack: draggable 3D icon globe =====
+   Raw logos sit on a sphere. It does NOT move on its own — grab and
+   drag to spin it like a globe; release keeps momentum that eases
+   to a stop. Reduced-motion users get a static organic scatter. */
 const techCloud = document.getElementById("techCloud");
 const GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5));
+
 techCloud.innerHTML = techStack
   .map((t, i) => {
-    const r = Math.sqrt((i + 0.6) / techStack.length) * 42; // % from center
-    const theta = i * GOLDEN_ANGLE;
-    const left = 50 + r * Math.cos(theta);
-    const top = 50 + r * Math.sin(theta);
     const size = 44 + ((i * 29) % 4) * 8; // 44–68px, varied but deterministic
     return `
-    <div class="cloud-icon reveal-item" title="${t.name}"
-         style="--stagger: ${i * 0.04}s; left:${left.toFixed(1)}%; top:${top.toFixed(1)}%; width:${size}px; height:${size}px;">
+    <div class="cloud-icon" title="${t.name}" style="width:${size}px; height:${size}px;">
       <img src="${t.img}" alt="${t.name}" loading="lazy" />
     </div>`;
   })
   .join("");
+
+const cloudIcons = [...techCloud.querySelectorAll(".cloud-icon")];
+
+if (reducedMotion) {
+  // static sunflower scatter — organic cluster, no overlaps, no motion
+  cloudIcons.forEach((el, i) => {
+    const r = Math.sqrt((i + 0.6) / cloudIcons.length) * 42;
+    const theta = i * GOLDEN_ANGLE;
+    el.style.left = (50 + r * Math.cos(theta)).toFixed(1) + "%";
+    el.style.top = (50 + r * Math.sin(theta)).toFixed(1) + "%";
+  });
+} else {
+  cloudIcons.forEach((el) => {
+    el.style.left = "50%";
+    el.style.top = "50%";
+  });
+
+  const N = cloudIcons.length;
+  // evenly distributed points on a unit sphere; the half-step offset
+  // keeps icons off the poles (a pole point wouldn't move when spun)
+  const points = cloudIcons.map((_, i) => {
+    const y = 1 - ((i + 0.5) / N) * 2;
+    const r = Math.sqrt(1 - y * y);
+    const theta = GOLDEN_ANGLE * i;
+    return { x: Math.cos(theta) * r, y, z: Math.sin(theta) * r };
+  });
+
+  let angle = 0.6;   // rotation around the vertical axis
+  let tilt = 0.3;    // tilt of that axis
+  let velA = 0;      // momentum carried after release
+  let velT = 0;
+  let dragging = false;
+  let lastX = 0, lastY = 0;
+
+  techCloud.addEventListener("pointerdown", (e) => {
+    dragging = true;
+    lastX = e.clientX;
+    lastY = e.clientY;
+    velA = velT = 0;
+    techCloud.classList.add("grabbing");
+    techCloud.setPointerCapture(e.pointerId);
+  });
+  techCloud.addEventListener("pointermove", (e) => {
+    if (!dragging) return;
+    const dx = e.clientX - lastX;
+    const dy = e.clientY - lastY;
+    lastX = e.clientX;
+    lastY = e.clientY;
+    // drag right → front face moves right; drag down → front face moves down
+    velA = dx * 0.005;
+    velT = -dy * 0.004;
+    angle += velA;
+    tilt += velT;
+  });
+  const release = () => {
+    dragging = false;
+    techCloud.classList.remove("grabbing");
+  };
+  techCloud.addEventListener("pointerup", release);
+  techCloud.addEventListener("pointercancel", release);
+
+  const frame = () => {
+    if (!dragging) {
+      // glide on after release, easing out to a stop
+      angle += velA;
+      tilt += velT;
+      velA *= 0.95;
+      velT *= 0.95;
+    }
+    // keep the tilt in a range where the cluster reads clean
+    tilt = Math.max(-0.9, Math.min(0.9, tilt));
+
+    const rect = techCloud.getBoundingClientRect();
+    const R = Math.min(rect.width, rect.height) / 2 - 40;
+    const cosA = Math.cos(angle), sinA = Math.sin(angle);
+    const cosT = Math.cos(tilt), sinT = Math.sin(tilt);
+
+    points.forEach((p, i) => {
+      // rotate around Y (spin), then X (tilt)
+      const x1 = p.x * cosA + p.z * sinA;
+      const z1 = -p.x * sinA + p.z * cosA;
+      const y1 = p.y * cosT - z1 * sinT;
+      const z2 = p.y * sinT + z1 * cosT;
+
+      const depth = (z2 + 1) / 2; // 0 (back) .. 1 (front)
+      const scale = 0.5 + depth * 0.6;
+      cloudIcons[i].style.transform =
+        `translate(-50%, -50%) translate(${x1 * R}px, ${y1 * R}px) scale(${scale})`;
+      cloudIcons[i].style.opacity = (0.3 + depth * 0.7).toFixed(2);
+      cloudIcons[i].style.zIndex = Math.round(depth * 100);
+    });
+
+    requestAnimationFrame(frame);
+  };
+  requestAnimationFrame(frame);
+}
 
 /* ===== Render stats ===== */
 const statsRow = document.getElementById("statsRow");
