@@ -721,74 +721,52 @@ a { color: var(--accent); text-decoration: none; }
   transition: width 1.2s cubic-bezier(0.25, 0.7, 0.3, 1);
 }
 
-/* ===== Skills layout: bars left, 3D icon sphere right ===== */
-.skills-wrap {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: center;
-  gap: 2rem 3rem;
-  text-align: left;
-}
-
-.tech-cloud {
-  position: relative;
-  height: 500px;
-  max-width: 540px;
+/* ===== Tech stack tiles (static grid) ===== */
+.tech-strip {
+  max-width: var(--max-width);
   margin: 0 auto;
-  cursor: grab;
-  touch-action: pan-y; /* horizontal drags spin; vertical still scrolls the page */
-}
-.tech-cloud.grabbing { cursor: grabbing; }
-/* soft orange glow behind the sphere */
-.tech-cloud::before {
-  content: "";
-  position: absolute;
-  inset: 15%;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 162, 0, 0.09), transparent 70%);
-  pointer-events: none;
-}
-
-/* icons sit in the same clean rounded tiles as the rest of the site */
-.cloud-icon {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 76px;
-  height: 76px;
-  background: linear-gradient(160deg, var(--bg-panel-2), var(--bg-panel));
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
-  will-change: transform, opacity;
-  pointer-events: none; /* let the container receive the drag */
-}
-.cloud-icon img {
-  width: 44px;
-  height: 44px;
-  object-fit: contain;
-}
-
-.tech-hint {
-  margin-top: 0.4rem;
-  color: var(--text-muted);
-  font-size: 0.78rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  opacity: 0.7;
+  padding: 0 2.5rem 6.5rem;
   text-align: center;
 }
+.tech-strip .section-kicker { margin-bottom: 1.8rem; }
 
-@media (max-width: 900px) {
-  .skills-wrap { grid-template-columns: 1fr; }
+.tech-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.2rem;
+}
+
+.tech-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  width: 104px;
+  padding: 1.1rem 0.6rem;
+  background: linear-gradient(160deg, var(--bg-panel-2), var(--bg-panel));
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+.tech-tile:hover {
+  transform: translateY(-6px);
+  border-color: rgba(255, 162, 0, 0.5);
+  box-shadow: var(--shadow-card);
+}
+.tech-tile img { width: 42px; height: 42px; object-fit: contain; }
+.tech-tile span {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  white-space: nowrap;
 }
 
 @media (max-width: 640px) {
-  .tech-cloud { height: 320px; }
-  .cloud-icon img { width: 40px; height: 40px; }
+  .tech-grid { gap: 0.9rem; }
+  .tech-tile { width: 88px; }
+  .tech-tile img { width: 36px; height: 36px; }
 }
 
 /* ===== Quote / motto strip ===== */
@@ -994,15 +972,4 @@ a { color: var(--accent); text-decoration: none; }
   .caret { animation: none; }
   .reveal, .reveal-item { opacity: 1; transform: none; transition: none; }
   .skill-bar-fill { transition: none; }
-  /* static, wrapped grid instead of the rotating sphere
-     (layout switch handled by js/main.js adding .cloud-static) */
-  .tech-cloud.cloud-static {
-    height: auto;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 1.4rem;
-    padding: 1rem 0;
-  }
-  .tech-cloud.cloud-static .cloud-icon { position: static; }
 }

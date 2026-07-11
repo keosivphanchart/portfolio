@@ -266,110 +266,17 @@ timeline.innerHTML = experience
   )
   .join("");
 
-/* ===== Tech stack 3D sphere =====
-   Icons are spread evenly on a sphere (fibonacci distribution). The
-   sphere does NOT auto-spin — it follows the mouse: horizontal
-   position rotates it, vertical position tilts it, with smooth easing.
-   Depth = scale + opacity. */
-const techCloud = document.getElementById("techCloud");
-techCloud.innerHTML = techStack
+/* ===== Render tech stack tiles (static grid) ===== */
+const techGrid = document.getElementById("techGrid");
+techGrid.innerHTML = techStack
   .map(
-    (t) => `
-    <div class="cloud-icon" title="${t.name}">
-      <img src="${t.img}" alt="${t.name}" loading="lazy" />
+    (t, i) => `
+    <div class="tech-tile reveal-item" style="--stagger: ${i * 0.05}s" title="${t.name}">
+      <img src="${t.img}" alt="" loading="lazy" />
+      <span>${t.name}</span>
     </div>`
   )
   .join("");
-
-if (reducedMotion) {
-  techCloud.classList.add("cloud-static");
-} else {
-  const icons = [...techCloud.querySelectorAll(".cloud-icon")];
-  const N = icons.length;
-  const GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5));
-
-  // evenly distributed points on a unit sphere; the half-step offset
-  // keeps any icon off the exact poles (a pole point wouldn't move
-  // when the sphere rotates)
-  const points = icons.map((_, i) => {
-    const y = 1 - ((i + 0.5) / N) * 2;
-    const r = Math.sqrt(1 - y * y);
-    const theta = GOLDEN_ANGLE * i;
-    return { x: Math.cos(theta) * r, y, z: Math.sin(theta) * r };
-  });
-
-  let angle = 0.6;   // rotation around the vertical axis
-  let tilt = 0.3;    // tilt of that axis
-  let velA = 0;      // spin momentum, carried after release
-  let velT = 0;
-  let dragging = false;
-  let lastX = 0, lastY = 0;
-
-  // grab-and-spin: the sphere follows your drag like a physical globe
-  techCloud.addEventListener("pointerdown", (e) => {
-    dragging = true;
-    lastX = e.clientX;
-    lastY = e.clientY;
-    velA = velT = 0;
-    techCloud.classList.add("grabbing");
-    techCloud.setPointerCapture(e.pointerId);
-  });
-  techCloud.addEventListener("pointermove", (e) => {
-    if (!dragging) return;
-    const dx = e.clientX - lastX;
-    const dy = e.clientY - lastY;
-    lastX = e.clientX;
-    lastY = e.clientY;
-    // drag right → front face moves right; drag down → front face moves down
-    velA = dx * 0.005;
-    velT = -dy * 0.004;
-    angle += velA;
-    tilt += velT;
-  });
-  const release = () => {
-    dragging = false;
-    techCloud.classList.remove("grabbing");
-  };
-  techCloud.addEventListener("pointerup", release);
-  techCloud.addEventListener("pointercancel", release);
-
-  const frame = () => {
-    if (!dragging) {
-      // momentum after release, easing out to a stop
-      angle += velA;
-      tilt += velT;
-      velA *= 0.95;
-      velT *= 0.95;
-    }
-    // keep the tilt in a range where the layout still reads clean
-    tilt = Math.max(-0.9, Math.min(0.9, tilt));
-
-    const rect = techCloud.getBoundingClientRect();
-    // larger radius = more gap between tiles on the sphere surface
-    const R = Math.min(rect.width, rect.height) / 2 - 34;
-    const cosA = Math.cos(angle), sinA = Math.sin(angle);
-    const cosT = Math.cos(tilt), sinT = Math.sin(tilt);
-
-    points.forEach((p, i) => {
-      // rotate around Y (spin), then X (tilt)
-      const x1 = p.x * cosA + p.z * sinA;
-      const z1 = -p.x * sinA + p.z * cosA;
-      const y1 = p.y * cosT - z1 * sinT;
-      const z2 = p.y * sinT + z1 * cosT;
-
-      const depth = (z2 + 1) / 2; // 0 (back) .. 1 (front)
-      // capped scale keeps front tiles from crowding their neighbors
-      const scale = 0.45 + depth * 0.55;
-      icons[i].style.transform =
-        `translate(-50%, -50%) translate(${x1 * R}px, ${y1 * R}px) scale(${scale})`;
-      icons[i].style.opacity = (0.25 + depth * 0.75).toFixed(2);
-      icons[i].style.zIndex = Math.round(depth * 100);
-    });
-
-    requestAnimationFrame(frame);
-  };
-  requestAnimationFrame(frame);
-}
 
 /* ===== Render stats ===== */
 const statsRow = document.getElementById("statsRow");
