@@ -724,16 +724,16 @@ a { color: var(--accent); text-decoration: none; }
 /* ===== Skills layout: bars left, 3D icon sphere right ===== */
 .skills-wrap {
   display: grid;
-  grid-template-columns: 1.1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   align-items: center;
-  gap: 2rem 3.5rem;
+  gap: 2rem 3rem;
   text-align: left;
 }
 
 .tech-cloud {
   position: relative;
-  height: 420px;
-  max-width: 460px;
+  height: 500px;
+  max-width: 540px;
   margin: 0 auto;
   cursor: grab;
   touch-action: pan-y; /* horizontal drags spin; vertical still scrolls the page */
@@ -757,18 +757,18 @@ a { color: var(--accent); text-decoration: none; }
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 64px;
-  height: 64px;
+  width: 76px;
+  height: 76px;
   background: linear-gradient(160deg, var(--bg-panel-2), var(--bg-panel));
   border: 1px solid var(--border);
-  border-radius: 16px;
+  border-radius: 18px;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
   will-change: transform, opacity;
   pointer-events: none; /* let the container receive the drag */
 }
 .cloud-icon img {
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   object-fit: contain;
 }
 

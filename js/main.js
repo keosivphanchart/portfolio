@@ -345,7 +345,8 @@ if (reducedMotion) {
     tilt = Math.max(-0.9, Math.min(0.9, tilt));
 
     const rect = techCloud.getBoundingClientRect();
-    const R = Math.min(rect.width, rect.height) / 2 - 52;
+    // larger radius = more gap between tiles on the sphere surface
+    const R = Math.min(rect.width, rect.height) / 2 - 34;
     const cosA = Math.cos(angle), sinA = Math.sin(angle);
     const cosT = Math.cos(tilt), sinT = Math.sin(tilt);
 
@@ -357,7 +358,8 @@ if (reducedMotion) {
       const z2 = p.y * sinT + z1 * cosT;
 
       const depth = (z2 + 1) / 2; // 0 (back) .. 1 (front)
-      const scale = 0.5 + depth * 0.6;
+      // capped scale keeps front tiles from crowding their neighbors
+      const scale = 0.45 + depth * 0.55;
       icons[i].style.transform =
         `translate(-50%, -50%) translate(${x1 * R}px, ${y1 * R}px) scale(${scale})`;
       icons[i].style.opacity = (0.25 + depth * 0.75).toFixed(2);
