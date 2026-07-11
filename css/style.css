@@ -721,57 +721,55 @@ a { color: var(--accent); text-decoration: none; }
   transition: width 1.2s cubic-bezier(0.25, 0.7, 0.3, 1);
 }
 
-/* ===== Tech stack marquee (infinite loop) ===== */
+/* ===== Tech stack 3D sphere ===== */
 .tech-strip {
   padding: 0 0 6.5rem;
   text-align: center;
 }
-.tech-strip .section-kicker { margin-bottom: 1.8rem; }
+.tech-strip .section-kicker { margin-bottom: 0.5rem; }
 
-.tech-marquee {
-  overflow: hidden;
-  /* fade the logos in/out at the edges */
-  mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
-  -webkit-mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
+.tech-cloud {
+  position: relative;
+  height: 460px;
+  max-width: 620px;
+  margin: 0 auto;
+}
+/* soft orange glow behind the sphere */
+.tech-cloud::before {
+  content: "";
+  position: absolute;
+  inset: 15%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 162, 0, 0.09), transparent 70%);
+  pointer-events: none;
 }
 
-.tech-track {
-  display: flex;
-  width: max-content;
-  animation: marquee 32s linear infinite;
+.cloud-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  will-change: transform, opacity;
+  pointer-events: none; /* let the container track the mouse */
 }
-.tech-marquee:hover .tech-track { animation-play-state: paused; }
-@keyframes marquee {
-  to { transform: translateX(-50%); }
+.cloud-icon img {
+  width: 54px;
+  height: 54px;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.35));
 }
 
-.tech-set { display: flex; }
-
-.tech-tile {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.55rem;
-  width: 104px;
-  padding: 1.1rem 0.6rem;
-  margin-right: 1.2rem;
-  background: linear-gradient(160deg, var(--bg-panel-2), var(--bg-panel));
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
-}
-.tech-tile:hover {
-  transform: translateY(-6px);
-  border-color: rgba(255, 162, 0, 0.5);
-  box-shadow: var(--shadow-card);
-}
-.tech-tile img { width: 42px; height: 42px; object-fit: contain; }
-.tech-tile span {
-  font-size: 0.72rem;
-  font-weight: 500;
+.tech-hint {
+  margin-top: 0.6rem;
   color: var(--text-muted);
-  white-space: nowrap;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+@media (max-width: 640px) {
+  .tech-cloud { height: 340px; }
+  .cloud-icon img { width: 40px; height: 40px; }
 }
 
 /* ===== Quote / motto strip ===== */
@@ -977,8 +975,15 @@ a { color: var(--accent); text-decoration: none; }
   .caret { animation: none; }
   .reveal, .reveal-item { opacity: 1; transform: none; transition: none; }
   .skill-bar-fill { transition: none; }
-  /* static, wrapped grid instead of the scrolling loop */
-  .tech-track { animation: none; width: auto; flex-wrap: wrap; justify-content: center; }
-  .tech-set { flex-wrap: wrap; justify-content: center; row-gap: 1.2rem; }
-  .tech-set[aria-hidden="true"] { display: none; }
+  /* static, wrapped grid instead of the rotating sphere
+     (layout switch handled by js/main.js adding .cloud-static) */
+  .tech-cloud.cloud-static {
+    height: auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.4rem;
+    padding: 1rem 0;
+  }
+  .tech-cloud.cloud-static .cloud-icon { position: static; }
 }

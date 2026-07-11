@@ -260,23 +260,84 @@ timeline.innerHTML = experience
   )
   .join("");
 
-/* ===== Render tech stack marquee =====
-   The list is rendered twice; the CSS animation slides the track by
-   -50% so the second copy lands exactly where the first began — that's
-   what makes the loop seamless. */
-const techTrack = document.getElementById("techTrack");
-const techTiles = techStack
+/* ===== Tech stack 3D sphere =====
+   Icons are spread evenly on a sphere (fibonacci distribution) and the
+   sphere spins continuously. Moving the mouse over it tilts the axis
+   and speeds up / reverses the spin. Depth = scale + opacity. */
+const techCloud = document.getElementById("techCloud");
+techCloud.innerHTML = techStack
   .map(
     (t) => `
-    <div class="tech-tile">
-      <img src="${t.img}" alt="" loading="lazy" />
-      <span>${t.name}</span>
+    <div class="cloud-icon" title="${t.name}">
+      <img src="${t.img}" alt="${t.name}" loading="lazy" />
     </div>`
   )
   .join("");
-techTrack.innerHTML =
-  `<div class="tech-set">${techTiles}</div>` +
-  `<div class="tech-set" aria-hidden="true">${techTiles}</div>`;
+
+if (reducedMotion) {
+  techCloud.classList.add("cloud-static");
+} else {
+  const icons = [...techCloud.querySelectorAll(".cloud-icon")];
+  const N = icons.length;
+  const GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5));
+
+  // evenly distributed points on a unit sphere
+  const points = icons.map((_, i) => {
+    const y = 1 - (i / (N - 1)) * 2;
+    const r = Math.sqrt(1 - y * y);
+    const theta = GOLDEN_ANGLE * i;
+    return { x: Math.cos(theta) * r, y, z: Math.sin(theta) * r };
+  });
+
+  let angle = 0;
+  let speed = 0.0035;          // current spin speed (rad/frame)
+  let targetSpeed = 0.0035;
+  let tilt = 0.35;             // current axis tilt
+  let targetTilt = 0.35;
+
+  // mouse steers the sphere: horizontal = spin speed, vertical = tilt
+  techCloud.addEventListener("mousemove", (e) => {
+    const rect = techCloud.getBoundingClientRect();
+    const dx = (e.clientX - rect.left) / rect.width - 0.5;  // -0.5 .. 0.5
+    const dy = (e.clientY - rect.top) / rect.height - 0.5;
+    targetSpeed = 0.0035 + dx * 0.02;
+    targetTilt = 0.35 + dy * 1.6;
+  });
+  techCloud.addEventListener("mouseleave", () => {
+    targetSpeed = 0.0035;
+    targetTilt = 0.35;
+  });
+
+  const frame = () => {
+    // ease toward the mouse-driven targets for a smooth feel
+    speed += (targetSpeed - speed) * 0.05;
+    tilt += (targetTilt - tilt) * 0.05;
+    angle += speed;
+
+    const rect = techCloud.getBoundingClientRect();
+    const R = Math.min(rect.width, rect.height) / 2 - 44;
+    const cosA = Math.cos(angle), sinA = Math.sin(angle);
+    const cosT = Math.cos(tilt), sinT = Math.sin(tilt);
+
+    points.forEach((p, i) => {
+      // rotate around Y (spin), then X (tilt)
+      const x1 = p.x * cosA + p.z * sinA;
+      const z1 = -p.x * sinA + p.z * cosA;
+      const y1 = p.y * cosT - z1 * sinT;
+      const z2 = p.y * sinT + z1 * cosT;
+
+      const depth = (z2 + 1) / 2; // 0 (back) .. 1 (front)
+      const scale = 0.5 + depth * 0.6;
+      icons[i].style.transform =
+        `translate(-50%, -50%) translate(${x1 * R}px, ${y1 * R}px) scale(${scale})`;
+      icons[i].style.opacity = (0.25 + depth * 0.75).toFixed(2);
+      icons[i].style.zIndex = Math.round(depth * 100);
+    });
+
+    requestAnimationFrame(frame);
+  };
+  requestAnimationFrame(frame);
+}
 
 /* ===== Render stats ===== */
 const statsRow = document.getElementById("statsRow");
