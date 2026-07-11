@@ -732,10 +732,13 @@ a { color: var(--accent); text-decoration: none; }
 
 .tech-cloud {
   position: relative;
-  height: 400px;
+  height: 420px;
   max-width: 460px;
   margin: 0 auto;
+  cursor: grab;
+  touch-action: pan-y; /* horizontal drags spin; vertical still scrolls the page */
 }
+.tech-cloud.grabbing { cursor: grabbing; }
 /* soft orange glow behind the sphere */
 .tech-cloud::before {
   content: "";
@@ -746,18 +749,27 @@ a { color: var(--accent); text-decoration: none; }
   pointer-events: none;
 }
 
+/* icons sit in the same clean rounded tiles as the rest of the site */
 .cloud-icon {
   position: absolute;
   top: 50%;
   left: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  background: linear-gradient(160deg, var(--bg-panel-2), var(--bg-panel));
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
   will-change: transform, opacity;
-  pointer-events: none; /* let the container track the mouse */
+  pointer-events: none; /* let the container receive the drag */
 }
 .cloud-icon img {
-  width: 54px;
-  height: 54px;
+  width: 36px;
+  height: 36px;
   object-fit: contain;
-  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.35));
 }
 
 .tech-hint {

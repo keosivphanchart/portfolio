@@ -298,33 +298,54 @@ if (reducedMotion) {
     return { x: Math.cos(theta) * r, y, z: Math.sin(theta) * r };
   });
 
-  let angle = 0.6;             // current rotation
-  let targetAngle = 0.6;
-  let tilt = 0.35;             // current axis tilt
-  let targetTilt = 0.35;
+  let angle = 0.6;   // rotation around the vertical axis
+  let tilt = 0.3;    // tilt of that axis
+  let velA = 0;      // spin momentum, carried after release
+  let velT = 0;
+  let dragging = false;
+  let lastX = 0, lastY = 0;
 
-  // the mouse position IS the rotation target — no auto-spin
-  const steer = (clientX, clientY) => {
-    const rect = techCloud.getBoundingClientRect();
-    const dx = (clientX - rect.left) / rect.width - 0.5;  // -0.5 .. 0.5
-    const dy = (clientY - rect.top) / rect.height - 0.5;
-    targetAngle = 0.6 + dx * 4;   // ~±115° of rotation across the width
-    targetTilt = 0.35 + dy * 1.8;
+  // grab-and-spin: the sphere follows your drag like a physical globe
+  techCloud.addEventListener("pointerdown", (e) => {
+    dragging = true;
+    lastX = e.clientX;
+    lastY = e.clientY;
+    velA = velT = 0;
+    techCloud.classList.add("grabbing");
+    techCloud.setPointerCapture(e.pointerId);
+  });
+  techCloud.addEventListener("pointermove", (e) => {
+    if (!dragging) return;
+    const dx = e.clientX - lastX;
+    const dy = e.clientY - lastY;
+    lastX = e.clientX;
+    lastY = e.clientY;
+    // drag right → front face moves right; drag down → front face moves down
+    velA = dx * 0.005;
+    velT = -dy * 0.004;
+    angle += velA;
+    tilt += velT;
+  });
+  const release = () => {
+    dragging = false;
+    techCloud.classList.remove("grabbing");
   };
-  techCloud.addEventListener("mousemove", (e) => steer(e.clientX, e.clientY));
-  techCloud.addEventListener(
-    "touchmove",
-    (e) => steer(e.touches[0].clientX, e.touches[0].clientY),
-    { passive: true }
-  );
+  techCloud.addEventListener("pointerup", release);
+  techCloud.addEventListener("pointercancel", release);
 
   const frame = () => {
-    // ease toward the mouse-driven targets for a smooth, weighty feel
-    angle += (targetAngle - angle) * 0.06;
-    tilt += (targetTilt - tilt) * 0.06;
+    if (!dragging) {
+      // momentum after release, easing out to a stop
+      angle += velA;
+      tilt += velT;
+      velA *= 0.95;
+      velT *= 0.95;
+    }
+    // keep the tilt in a range where the layout still reads clean
+    tilt = Math.max(-0.9, Math.min(0.9, tilt));
 
     const rect = techCloud.getBoundingClientRect();
-    const R = Math.min(rect.width, rect.height) / 2 - 44;
+    const R = Math.min(rect.width, rect.height) / 2 - 52;
     const cosA = Math.cos(angle), sinA = Math.sin(angle);
     const cosT = Math.cos(tilt), sinT = Math.sin(tilt);
 
