@@ -2,6 +2,6 @@
 export const stats = [
   { value: 2, suffix: "+", label: "Years Experience" },
   { value: 15, suffix: "+", label: "Projects Completed" },
-  { value: 8, suffix: "+", label: "Happy Clients" },
+  { value: 100, suffix: "+", label: "Servers Monitored" },
   { value: 12, suffix: "", label: "Technologies" },
 ];
