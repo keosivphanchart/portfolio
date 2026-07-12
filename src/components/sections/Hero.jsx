@@ -3,6 +3,7 @@ import Icon from "../Icon.jsx";
 import { site } from "../../data/site.js";
 import { roles } from "../../data/roles.js";
 import { useTypewriter } from "../../hooks/useTypewriter.js";
+import { goToSection } from "../../utils/navigation.js";
 
 export default function Hero() {
   const role = useTypewriter(roles);
@@ -39,7 +40,11 @@ export default function Hero() {
               <Icon name="download" />
               Get Resume
             </a>
-            <a href="#projects" className="btn btn-ghost">
+            <a
+              href="/projects"
+              className="btn btn-ghost"
+              onClick={(e) => goToSection("projects", e)}
+            >
               View Work
               <Icon name="arrow-right" />
             </a>

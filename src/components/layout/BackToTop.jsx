@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Icon from "../Icon.jsx";
+import { goToSection } from "../../utils/navigation.js";
 
 export default function BackToTop() {
   const [show, setShow] = useState(false);
@@ -13,9 +14,10 @@ export default function BackToTop() {
 
   return (
     <a
-      href="#home"
+      href="/"
       className={`back-to-top${show ? " show" : ""}`}
       aria-label="Back to top"
+      onClick={(e) => goToSection("home", e)}
     >
       <Icon name="arrow-up" />
     </a>

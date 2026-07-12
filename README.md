@@ -80,4 +80,6 @@ npm run preview   # preview the production build
 ## Deploy on Vercel
 
 Push to GitHub and import the repo on Vercel — it auto-detects Vite
-(build command `npm run build`, output directory `dist`). No config needed.
+(build command `npm run build`, output directory `dist`). `vercel.json`
+rewrites every path to `index.html` so the clean section URLs
+(`/services`, `/projects`, …) work as deep links.
